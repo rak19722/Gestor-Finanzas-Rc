@@ -1,0 +1,34 @@
+<form th:action="@{/obras/guardar-gasto}" th:object="${gasto}" method="post">
+    <input type="hidden" th:field="*{obras.obraId}" />
+    <input type="hidden" th:field="*{gastoId}" />
+
+    <label>Categoría Material</label>
+    <input type="text" th:field="*{categoriaMaterial}" />
+    <br/>
+
+    <label>Provedor</label>
+    <input type="text" th:field="*{trabajadorEncargo}" />
+    <br/>
+
+    <label>Concepto</label>
+    <input type="text" th:field="*{concepto}" />
+    <br/>
+
+    <label>Fecha</label>
+    <input type="date" th:field="*{fecha}" />
+    <br/>
+
+    <label>No. Semana</label>
+    <input type="number" th:field="*{noSemana}" />
+    <br/>
+
+    <label>Monto</label>
+    <input type="number" step="0.01" th:field="*{presupuesto}" />
+    <br/>
+
+    <button type="submit">Guardar</button>
+    <button type="button" class="nav-btn"
+            th:attr="data-url=@{'/obras/' + ${obra.obraId} + '/' + ${obra.nombre} + '/gastos'}">
+        Cancelar
+    </button>
+</form>

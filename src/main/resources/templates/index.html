@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Obras</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<h2>Gestión de Obras</h2>
+
+<button class="nav-btn" th:attr="data-url=@{/obras/nueva}">
+    Agregar Obra
+</button>
+
+<button class="nav-btn" th:attr="data-url=@{/obras/gastosG}">
+    Ver gastos Gastos generales
+</button>
+
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Maestro Encargado</th>
+            <th>Cliente</th>
+            <th>Tipo Obra</th>
+            <th>Presupuesto</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:if="${#lists.isEmpty(obras)}">
+            <td colspan="7">No hay obras registradas.</td>
+        </tr>
+
+        <tr th:each="obra : ${obras}">
+            <td th:text="${obra.obraId}"></td>
+            <td th:text="${obra.nombre}"></td>
+            <td th:text="${obra.maestroEncargado}"></td>
+            <td th:text="${obra.cliente}"></td>
+            <td th:text="${obra.tipoObra}"></td>
+            <td th:text="${obra.presupuesto}"></td>
+            <td>
+                <button class="nav-btn"
+                        th:attr="data-url=@{'/obras/' + ${obra.obraId} + '/' + ${obra.nombre} + '/gastos'}">
+                    Ver gastos
+                </button>
+
+            <a th:href="@{/obras/editar/{id}(id=${obra.obraId})}" class="nav-btn">
+                Editar
+            </a>
+
+
+
+            <form th:action="@{/obras/eliminar/{id}(id=${obra.obraId})}" method="post" style="display:inline">
+                <button type="submit" 
+                onclick="return confirm('¿Estás seguro de que deseas eliminar esta Obra?')">
+                Eliminar Obra</button> 
+            </form>
+
+
+
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Gastos de la Obra</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<h2>Gastos de la obra: <span th:text="${nombreObra}"></span></h2>
+
+<!-- Botones -->
+<div>
+    <button class="nav-btn"
+            th:attr="data-url=@{'/obras/nueva-gasto/' + ${obraId}}">
+        Agregar Gasto
+    </button>
+    <button class="nav-btn" th:attr="data-url=@{/obras}">
+        Volver
+    </button>
+</div>
+
+<!-- Tabla de gastos -->
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Categoría</th>
+            <th>Provedor</th>
+            <th>Concepto</th>
+            <th>Fecha</th>
+            <th>Semana</th>
+            <th>Monto</th>
+            <th>Acciones</th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:if="${#lists.isEmpty(gastos)}">
+            <td colspan="9">No hay gastos registrados.</td>
+        </tr>
+
+        <tr th:each="gasto : ${gastos}">
+            <td th:text="${gasto.gastoId}"></td>
+            <td th:text="${gasto.categoriaMaterial}"></td>
+            <td th:text="${gasto.trabajadorEncargo}"></td>
+            <td th:text="${gasto.concepto}"></td>
+            <td th:text="${gasto.fecha}"></td>
+            <td th:text="${gasto.noSemana}"></td>
+            <td th:text="${gasto.presupuesto}"></td>
+
+    <td>
+
+    <a th:href="@{/obras/{obraId}/{nombre}/gastos/editarG/{gastoId}(obraId=${gasto.obras.obraId},
+    nombre=${gasto.obras.nombre}, 
+    gastoId=${gasto.gastoId})}" class="nav-btn">
+        Editar
+    </a>
+
+
+         
+<form th:action="@{/obras/eliminarG/{id}(id=${gasto.gastoId})}" method="post" style="display:inline">
+    <input type="hidden" name="obraId" th:value="${obraId}" />
+    <input type="hidden" name="nombre" th:value="${nombreObra}" />
+    
+    <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este gasto?')">
+        Eliminar Gasto
+    </button>
+</form>
+
+
+
+
+        
+    </td>  
+
+        </tr>
+    </tbody>
+</table>
+
+<script src="/js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gastos</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<h2>Gastos generales de todas las obras</h2>
+
+<div>
+    <form th:action="@{/obras/gastosG}" method="get" style="margin-bottom: 15px;">
+        <input type="text" name="q" placeholder="Buscar gasto..." 
+               th:value="${param.q}" />
+        <button type="submit">Buscar</button>
+        <a th:href="@{/obras/gastosG}" style="margin-left:10px;">Limpiar</a>
+    </form>
+</div>
+
+<div>
+    <button class="nav-btn" th:attr="data-url=@{/obras}">
+        Volver
+    </button>
+</div>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Obra</th>
+            <th>Categoría</th>
+            <th>Trabajador</th>
+            <th>Concepto</th>
+            <th>Fecha</th>
+            <th>Semana</th>
+            <th>Monto</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:if="${#lists.isEmpty(gastos_generales)}">
+            <td colspan="9">No hay gastos registrados.</td>
+        </tr>
+
+        <tr th:each="gasto : ${gastos_generales}">
+            <td th:text="${gasto.gastoId}"></td>
+            <td th:text="${gasto.nombre}"></td>
+            <td th:text="${gasto.categoriaMaterial}"></td>
+            <td th:text="${gasto.trabajadorEncargo}"></td>
+            <td th:text="${gasto.concepto}"></td>
+            <td th:text="${gasto.fecha}"></td>
+            <td th:text="${gasto.noSemana}"></td>
+            <td th:text="${gasto.presupuesto}"></td>
+        </tr>
+    </tbody>
+</table>
+
+<script src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Agregar Gasto</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<h2>Agregar Gasto para la obra: <span th:text="${obra.nombre}"></span></h2>
+
+<form th:action="@{/obras/guardar-gasto}" th:object="${gasto}" method="post">
+    <input type="hidden" th:field="*{obras.obraId}" />
+
+
+
+    <label>Categoría Material</label>
+    <input type="text" th:field="*{categoriaMaterial}" />
+    <br/>
+
+    <label>Provedor</label>
+    <input type="text" th:field="*{trabajadorEncargo}" />
+    <br/>
+
+    <label>Concepto</label>
+    <input type="text" th:field="*{concepto}" />
+    <br/>
+
+    <label>Fecha</label>
+    <input type="date" th:field="*{fecha}" />
+    <br/>
+
+    <label>No. Semana</label>
+    <input type="number" th:field="*{noSemana}" />
+    <br/>
+
+
+    <button type="submit">Guardar</button>
+    <button type="button" class="nav-btn"
+            th:attr="data-url=@{'/obras/' + ${obra.obraId} + '/' + ${obra.nombre} + '/gastos'}">
+        Cancelar
+    </button>
+</form>
+
+<script src="/js/main.js"></script>
+</body>
+</html>
