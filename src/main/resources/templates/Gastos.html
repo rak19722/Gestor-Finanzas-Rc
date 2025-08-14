@@ -4,42 +4,56 @@
     <meta charset="UTF-8" />
     <title>Gastos de la Obra</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <style>
+        body { margin:0; font-family: Arial, sans-serif; background-color:#6dd399; }
+        .container { background-color:#6dd399; padding:1rem 2rem; max-width:1200px; margin:auto; }
+        .navbar { display:flex; gap:10px; margin-bottom:1rem; }
+        .nav-btn { background:#fff; color:#000; padding:0.4rem 1rem; border-radius:20px; border:none; cursor:pointer; font-weight:bold; }
+         .nav-btn:hover {background: rgb(49, 49, 227);  color:white; }
+        h2 { font-weight:bold; margin:1rem 0; }
+        table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; }
+        table th, table td { padding:0.6rem; text-align:left; border-bottom:1px solid #ccc; }
+        table th { background:#b3b3b3; color:#000; }
+        table tr:hover { background:#f0f0f0; }
+        a.nav-btn { text-decoration:none; display:inline-block; }
+        form { display:inline; }
+        button[type="submit"] { background:#ff6b6b; color:#fff; padding:0.4rem 0.8rem; border:none; border-radius:20px; cursor:pointer; font-weight:bold; }
+        button[type="submit"]:hover { background:#d9534f; }
+    </style>
 </head>
 <body>
-<h2>Gastos de la obra: <span th:text="${nombreObra}"></span></h2>
+<div class="container">
+    <h2>Gastos de la obra: <span th:text="${nombreObra}"></span></h2>
 
-<!-- Botones -->
-<div>
-    <button class="nav-btn"
-            th:attr="data-url=@{'/obras/nueva-gasto/' + ${obraId}}">
-        Agregar Gasto
-    </button>
-    <button class="nav-btn" th:attr="data-url=@{/obras}">
-        Volver
-    </button>
-</div>
+    <!-- Botones -->
+    <div class="navbar">
+        <button class="nav-btn"
+                th:attr="data-url=@{'/obras/nueva-gasto/' + ${obraId}}">
+            Agregar Gasto
+        </button>
+        <button class="nav-btn" th:attr="data-url=@{/obras}">
+            Volver
+        </button>
+    </div>
 
-<!-- Tabla de gastos -->
-<table border="1">
-    <thead>
+    <!-- Tabla de gastos -->
+    <table>
+        <thead>
         <tr>
             <th>ID</th>
             <th>Categoría</th>
-            <th>Provedor</th>
+            <th>Proveedor</th>
             <th>Concepto</th>
             <th>Fecha</th>
             <th>Semana</th>
             <th>Monto</th>
             <th>Acciones</th>
-
-
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         <tr th:if="${#lists.isEmpty(gastos)}">
-            <td colspan="9">No hay gastos registrados.</td>
+            <td colspan="8">No hay gastos registrados.</td>
         </tr>
-
         <tr th:each="gasto : ${gastos}">
             <td th:text="${gasto.gastoId}"></td>
             <td th:text="${gasto.categoriaMaterial}"></td>
@@ -48,37 +62,25 @@
             <td th:text="${gasto.fecha}"></td>
             <td th:text="${gasto.noSemana}"></td>
             <td th:text="${gasto.presupuesto}"></td>
+            <td>
+                <a th:href="@{/obras/{obraId}/{nombre}/gastos/editarG/{gastoId}(obraId=${gasto.obras.obraId},
+                    nombre=${gasto.obras.nombre}, 
+                    gastoId=${gasto.gastoId})}" class="nav-btn">
+                    Editar
+                </a>
 
-    <td>
-
-    <a th:href="@{/obras/{obraId}/{nombre}/gastos/editarG/{gastoId}(obraId=${gasto.obras.obraId},
-    nombre=${gasto.obras.nombre}, 
-    gastoId=${gasto.gastoId})}" class="nav-btn">
-        Editar
-    </a>
-
-
-         
-<form th:action="@{/obras/eliminarG/{id}(id=${gasto.gastoId})}" method="post" style="display:inline">
-    <input type="hidden" name="obraId" th:value="${obraId}" />
-    <input type="hidden" name="nombre" th:value="${nombreObra}" />
-    
-    <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este gasto?')">
-        Eliminar Gasto
-    </button>
-</form>
-
-
-
-
-        
-    </td>  
-
+                <form th:action="@{/obras/eliminarG/{id}(id=${gasto.gastoId})}" method="post">
+                    <input type="hidden" name="obraId" th:value="${obraId}" />
+                    <input type="hidden" name="nombre" th:value="${nombreObra}" />
+                    <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este gasto?')">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
         </tr>
-    </tbody>
-</table>
-
+        </tbody>
+    </table>
+</div>
 <script src="/js/main.js"></script>
-
 </body>
 </html>
