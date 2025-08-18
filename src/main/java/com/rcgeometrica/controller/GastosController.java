@@ -46,21 +46,30 @@ public String mostrarTodosGastos(
 }
 
 
-
-    // Mostrar gastos filtrados por obra y nombre
+//gastos filtrados por obra
 @GetMapping("/{obraId}/{nombre}/gastos")
 public String mostrarGastosPorObra(
         @PathVariable Long obraId,
         @PathVariable String nombre,
         Model model) {
 
+    System.out.println("Obra ID: " + obraId);
+    System.out.println("Nombre obra: " + nombre);
+
     List<Gastos> gastos = gastosRepository.findByObras_ObraIdAndNombre(obraId, nombre);
+
+    System.out.println("Gastos encontrados: " + gastos.size());
+    for (Gastos g : gastos) {
+        System.out.println("Gasto: " + g.getConcepto() + " | " + g.getPresupuesto());
+    }
 
     model.addAttribute("gastos", gastos);
     model.addAttribute("nombreObra", nombre);
-    model.addAttribute("obraId", obraId); // <-- NECESARIO PARA EL BOTÓN
-    return "gastos";
+    model.addAttribute("obraId", obraId);
+
+    return "Gastos";
 }
+
 
 
     // Mostrar formulario de nuevo gasto
