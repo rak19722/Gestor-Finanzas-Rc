@@ -21,5 +21,8 @@ public interface IgastosRepository extends CrudRepository<Gastos, Long> {
        )
     List<Gastos> buscarPorTexto(@Param("texto") String texto);
 
-    List<Gastos> findByObras_ObraIdAndNombre(Long obraId, String nombre);
+@Query("SELECT g FROM Gastos g WHERE g.obras.obraId = :obraId AND LOWER(g.nombre) = LOWER(:nombre)")
+List<Gastos> findByObras_ObraIdAndNombre(@Param("obraId") Long obraId,
+                                        @Param("nombre") String nombre);
+
 }
