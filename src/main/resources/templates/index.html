@@ -4,7 +4,85 @@
     <meta charset="UTF-8">
     <title>Gestión de Obras</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        body { margin:0; font-family: Arial, sans-serif; background-color:#6dd399; }
+        .container { background-color:#6dd399; padding:1rem 2rem; max-width:1200px; margin:auto; }
+        .navbar { display:flex; gap:10px; background:#6dd399; padding:10px; border-radius:0 0 10px 10px; }
+        .nav-btn { background:#fff; color:#000000; padding:0.4rem 1rem; border-radius:20px; border:none; cursor:pointer; font-weight:bold; }
+        .nav-btn:hover { background: rgb(49, 49, 227); color:white; }
+        h2 { font-weight:bold; margin:1rem 0; }
+        table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; }
+        table th, table td { padding:0.6rem; text-align:left; border-bottom:1px solid #ccc; }
+        table th { background:#b3b3b3; color:#000; }
+        table tr:hover { background:#f0f0f0; }
+        a.nav-btn { text-decoration:none; display:inline-block; }
+        form { display:inline; }
+        button[type="submit"] { background:#ff6b6b; color:#ffffff; padding:0.4rem 0.8rem; border:none; border-radius:20px; cursor:pointer; font-weight:bold; }
+        button[type="submit"]:hover { background:#d9534f; }
 
+        /* --- Diseño para móviles --- */
+        @media (max-width: 740px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .nav-btn {
+                width: 100%;
+                text-align: center;
+                padding: 0.8rem;
+            }
+
+            table {
+                border: 0;
+            }
+
+            table thead {
+                display: none; /* ocultamos cabecera en móvil */
+            }
+
+            table, table tbody, table tr, table td {
+                display: block;
+                width: 100%;
+            }
+
+            table tr {
+                margin-bottom: 1rem;
+                background: #fff;
+                border-radius: 10px;
+                padding: 0.8rem;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+
+            table td {
+                border: none;
+                padding: 0.5rem 0;
+                text-align: left; /* texto alineado */
+            }
+
+            table td::before {
+                content: attr(data-label) ": ";
+                font-weight: bold;
+                margin-right: 0.5rem;
+            }
+
+            /* Botones centrados debajo */
+            td[data-label="Acciones"] {
+                text-align: center;
+            }
+
+            td[data-label="Acciones"] .nav-btn,
+            td[data-label="Acciones"] form button {
+                display: block;
+                width: 100%;
+                margin: 0.3rem 0;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -36,13 +114,13 @@
             <td colspan="7">No hay obras registradas.</td>
         </tr>
         <tr th:each="obra : ${obras}">
-            <td th:text="${obra.obraId}"></td>
-            <td th:text="${obra.nombre}"></td>
-            <td th:text="${obra.maestroEncargado}"></td>
-            <td th:text="${obra.cliente}"></td>
-            <td th:text="${obra.tipoObra}"></td>
-            <td th:text="${obra.presupuesto}"></td>
-            <td>
+            <td th:text="${obra.obraId}" data-label="ID"></td>
+            <td th:text="${obra.nombre}" data-label="Nombre"></td>
+            <td th:text="${obra.maestroEncargado}" data-label="Maestro Encargado"></td>
+            <td th:text="${obra.cliente}" data-label="Cliente"></td>
+            <td th:text="${obra.tipoObra}" data-label="Tipo Obra"></td>
+            <td th:text="${obra.presupuesto}" data-label="Presupuesto"></td>
+            <td data-label="Acciones">
                 <button class="nav-btn"
                         th:attr="data-url=@{'/obras/' + ${obra.obraId} + '/' + ${obra.nombre} + '/gastos'}">
                     Ver gastos
