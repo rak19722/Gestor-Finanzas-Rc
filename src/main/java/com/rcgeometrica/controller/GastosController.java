@@ -59,7 +59,7 @@ public String mostrarGastosPorObra(
     model.addAttribute("gastos", gastos);
     model.addAttribute("nombreObra", nombre);
     model.addAttribute("obraId", obraId); // <-- NECESARIO PARA EL BOTÓN
-    return "gastos";
+    return "Gastos";
 }
 
 
