@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gastos Generales</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        body { margin:0; font-family: Arial, sans-serif; background-color:#6dd399; }
+        .container { background-color:#6dd399; padding:1rem 2rem; max-width:1200px; margin:auto; }
+
+        h2 { font-weight:bold; margin:1rem 0; }
+
+        /* Buscador */
+        .search-form {
+            display:flex;
+            gap:10px;
+            margin-bottom:1rem;
+        }
+        .search-form input[type="text"] {
+            flex:1;
+            padding:0.5rem;
+            border-radius:20px;
+            border:1px solid #ccc;
+        }
+        .search-form button,
+        .search-form a {
+            background:#fff;
+            border:none;
+            border-radius:20px;
+            padding:0.5rem 1rem;
+            cursor:pointer;
+            font-weight:bold;
+            text-decoration:none;
+            color:#000;
+            text-align:center;
+        }
+        .search-form button:hover,
+        .search-form a:hover {
+            background:rgb(49,49,227);
+            color:#fff;
+        }
+
+        /* Navbar */
+        .navbar { display:flex; gap:10px; margin-bottom:1rem; }
+        .nav-btn { background:#fff; color:#000; padding:0.4rem 1rem; border-radius:20px; border:none; cursor:pointer; font-weight:bold; }
+        .nav-btn:hover { background:rgb(49,49,227); color:#fff; }
+
+        /* Tabla */
+        table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; }
+        table th, table td { padding:0.6rem; text-align:left; border-bottom:1px solid #ccc; }
+        table th { background:#b3b3b3; color:#000; }
+        table tr:hover { background:#f0f0f0; }
+
+        /* --- Diseño móvil --- */
+        @media (max-width:740px) {
+            .search-form { flex-direction:column; }
+            .search-form input, .search-form button, .search-form a { width:100%; }
+
+            table { border:0; }
+            table thead { display:none; }
+            table, table tbody, table tr, table td { display:block; width:100%; }
+            table tr {
+                margin-bottom:1rem;
+                background:#fff;
+                border-radius:10px;
+                padding:0.8rem;
+                box-shadow:0 2px 5px rgba(0,0,0,0.1);
+            }
+            table td { border:none; padding:0.5rem 0; text-align:left; }
+            table td::before { content: attr(data-label) ": "; font-weight:bold; margin-right:0.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Gastos generales de todas las obras</h2>
+
+    <!-- Buscador -->
+    <form th:action="@{/obras/gastosG}" method="get" class="search-form">
+        <input type="text" name="q" placeholder="Buscar gasto..." th:value="${param.q}" />
+        <button type="submit">Buscar</button>
+        <a th:href="@{/obras/gastosG}">Limpiar</a>
+    </form>
+
+    <!-- Botón volver -->
+    <div class="navbar">
+        <button class="nav-btn" th:attr="data-url=@{/obras}">
+            Volver
+        </button>
+    </div>
+
+    <!-- Tabla -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Obra</th>
+                <th>Categoría</th>
+                <th>Trabajador</th>
+                <th>Concepto</th>
+                <th>Fecha</th>
+                <th>Semana</th>
+                <th>Monto</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${#lists.isEmpty(gastos_generales)}">
+                <td colspan="8">No hay gastos registrados.</td>
+            </tr>
+            <tr th:each="gasto : ${gastos_generales}">
+                <td th:text="${gasto.gastoId}" data-label="ID"></td>
+                <td th:text="${gasto.nombre}" data-label="Obra"></td>
+                <td th:text="${gasto.categoriaMaterial}" data-label="Categoría"></td>
+                <td th:text="${gasto.trabajadorEncargo}" data-label="Trabajador"></td>
+                <td th:text="${gasto.concepto}" data-label="Concepto"></td>
+                <td th:text="${gasto.fecha}" data-label="Fecha"></td>
+                <td th:text="${gasto.noSemana}" data-label="Semana"></td>
+                <td th:text="${#numbers.formatDecimal(gasto.presupuesto, 1, 'COMMA', 2, 'POINT')}" data-label="Monto"></td>
+
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>

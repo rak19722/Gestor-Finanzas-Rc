@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gastos de la Obra</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <style>
+        body { margin:0; font-family: Arial, sans-serif; background-color:#6dd399; }
+        .container { background-color:#6dd399; padding:1rem 2rem; max-width:1200px; margin:auto; }
+        
+        .navbar { display:flex; gap:10px; margin-bottom:1rem; }
+        .nav-btn { background:#fff; color:#000; padding:0.4rem 1rem; border-radius:20px; border:none; cursor:pointer; font-weight:bold; }
+        .nav-btn-encabezado { background:#fff; color:#000; padding:0.4rem 1rem; border-radius:20px; border:none; cursor:pointer; font-weight:bold; }
+        .nav-btn:hover {background: rgb(49, 49, 227);  color:white; }
+        .nav-btn-encabezado:hover {background: rgb(49, 49, 227);  color:white; }
+
+        h2 { font-weight:bold; margin:1rem 0; }
+
+        table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; }
+        table th, table td { padding:0.6rem; text-align:left; border-bottom:1px solid #ccc; }
+        table th { background:#b3b3b3; color:#000; }
+        table tr:hover { background:#f0f0f0; }
+        a.nav-btn { text-decoration:none; display:inline-block; }
+        form { display:inline; }
+        button[type="submit"] { background:#ff6b6b; color:#fff; padding:0.4rem 0.8rem; border:none; border-radius:20px; cursor:pointer; font-weight:bold; }
+        button[type="submit"]:hover { background:#d9534f; }
+
+        /* --- Diseño responsive como tarjetas --- */
+        @media (max-width: 740px) {
+            .container { padding:1rem; }
+
+            .navbar { flex-direction: column; gap: 0.5rem; }
+            .nav-btn { width: 100%; text-align: center; padding: 0.8rem; background-color: rgb(55, 49, 227); color:white; }
+            .nav-btn-encabezado { width: 100%; text-align: center; padding: 0.8rem; background-color: rgb(243, 238, 238); color:rgb(0, 0, 0); }
+
+            table { border: 0; }
+            table thead { display: none; }
+            table, table tbody, table tr, table td { display: block; width: 100%; }
+            table tr { margin-bottom: 1rem; background: #fff; border-radius: 10px; padding: 0.8rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+            table td { border: none; padding: 0.5rem 0; text-align: left; }
+            table td::before { content: attr(data-label) ": "; font-weight: bold; margin-right: 0.5rem; }
+
+            /* Ajuste acciones */
+            td[data-label="Acciones"] { text-align:center; }
+            td[data-label="Acciones"] .nav-btn,
+            td[data-label="Acciones"] form button { display:block; width:100%; margin:0.3rem 0; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Gastos de la obra: <span th:text="${nombreObra}"></span></h2>
+
+    <!-- Botones -->
+    <div class="navbar">
+        <button class="nav-btn-encabezado" th:attr="data-url=@{'/obras/nueva-gasto/' + ${obraId}}">
+            Agregar Gasto
+        </button>
+        <button class="nav-btn-encabezado" th:attr="data-url=@{/obras}">
+            Volver
+        </button>
+    </div>
+
+    <!-- Tabla de gastos -->
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Categoría</th>
+            <th>Proveedor</th>
+            <th>Concepto</th>
+            <th>Fecha</th>
+            <th>Semana</th>
+            <th>Monto</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(gastos)}">
+            <td colspan="8">No hay gastos registrados.</td>
+        </tr>
+        <tr th:each="gasto : ${gastos}">
+            <td th:text="${gasto.gastoId}" data-label="ID"></td>
+            <td th:text="${gasto.categoriaMaterial}" data-label="Categoría"></td>
+            <td th:text="${gasto.trabajadorEncargo}" data-label="Proveedor"></td>
+            <td th:text="${gasto.concepto}" data-label="Concepto"></td>
+            <td th:text="${gasto.fecha}" data-label="Fecha"></td>
+            <td th:text="${gasto.noSemana}" data-label="Semana"></td>
+            <td th:text="${#numbers.formatDecimal(gasto.presupuesto, 1, 'COMMA', 2, 'POINT')}" data-label="Monto"></td>
+
+            <td data-label="Acciones">
+                <a th:href="@{/obras/{obraId}/{nombre}/gastos/editarG/{gastoId}(obraId=${gasto.obras.obraId}, nombre=${gasto.obras.nombre}, gastoId=${gasto.gastoId})}" class="nav-btn">
+                    Editar
+                </a>
+                <form th:action="@{/obras/eliminarG/{id}(id=${gasto.gastoId})}" method="post">
+                    <input type="hidden" name="obraId" th:value="${obraId}" />
+                    <input type="hidden" name="nombre" th:value="${nombreObra}" />
+                    <button type="submit" onclick="return confirm('¿Estás seguro de que deseas eliminar este gasto?')">
+                        Eliminar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script src="/js/main.js"></script>
+</body>
+</html>
