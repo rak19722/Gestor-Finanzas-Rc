@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
@@ -46,30 +48,21 @@ public String mostrarTodosGastos(
 }
 
 
-//gastos filtrados por obra
+
+    // Mostrar gastos filtrados por obra y nombre
 @GetMapping("/{obraId}/{nombre}/gastos")
 public String mostrarGastosPorObra(
         @PathVariable Long obraId,
         @PathVariable String nombre,
         Model model) {
 
-    System.out.println("Obra ID: " + obraId);
-    System.out.println("Nombre obra: " + nombre);
-
     List<Gastos> gastos = gastosRepository.findByObras_ObraIdAndNombre(obraId, nombre);
-
-    System.out.println("Gastos encontrados: " + gastos.size());
-    for (Gastos g : gastos) {
-        System.out.println("Gasto: " + g.getConcepto() + " | " + g.getPresupuesto());
-    }
 
     model.addAttribute("gastos", gastos);
     model.addAttribute("nombreObra", nombre);
-    model.addAttribute("obraId", obraId);
-
+    model.addAttribute("obraId", obraId); // <-- NECESARIO PARA EL BOTÓN
     return "Gastos";
 }
-
 
 
     // Mostrar formulario de nuevo gasto
@@ -94,14 +87,22 @@ public String mostrarFormularioGasto(@PathVariable Long obraId, Model model) {
 @PostMapping("/guardar-gasto")
 public String guardarGasto(@ModelAttribute Gastos gasto) {
     Obras obra = obrasRepository.findById(gasto.getObras().getObraId())
-                    .orElseThrow(() -> new RuntimeException("Obra no encontrada"));
-      gasto.setObras(obra);
-    gasto.setNombre(obra.getNombre());  // 👈 Aquí rellenas el campo requerido
+        .orElseThrow(() -> new RuntimeException("Obra no encontrada"));
 
+    gasto.setObras(obra);
+    gasto.setNombre(obra.getNombre());
     gastosRepository.save(gasto);
 
     Long obraId = obra.getObraId();
-    return "redirect:/obras/" + obraId + "/" + obra.getNombre() + "/gastos";
+
+    // Construye y codifica la URL (espacios, acentos, etc.)
+    String redirectPath = UriComponentsBuilder
+        .fromPath("/obras/{id}/{nombre}/gastos")
+        .buildAndExpand(obraId, obra.getNombre())
+        .encode(StandardCharsets.UTF_8)   // <- clave
+        .toUriString();
+
+    return "redirect:" + redirectPath;
 }
 
 // editar gastos filtrados por obra
@@ -148,7 +149,13 @@ public String actualizarGasto(
 
     gastosRepository.save(gasto);
 
-    return "redirect:/obras/" + obraId + "/" + nombre + "/gastos";
+    String redirectPath = UriComponentsBuilder
+            .fromPath("/obras/{id}/{nombre}/gastos")
+            .buildAndExpand(obraId, nombre)
+            .encode()
+            .toUriString();
+
+    return "redirect:" + redirectPath;
 }
 
 
@@ -163,7 +170,14 @@ public String actualizarGasto(
             @RequestParam String nombre,
             @RequestParam long obraId) {
             gastosRepository.deleteById(id);
-            return "redirect:/obras/" + obraId + "/" + nombre + "/gastos";
+
+            String redirectPath = UriComponentsBuilder
+            .fromPath("/obras/{id}/{nombre}/gastos")
+            .buildAndExpand(obraId, nombre)
+            .encode()
+            .toUriString();
+            
+            return "redirect:" + redirectPath;
         }
 
 

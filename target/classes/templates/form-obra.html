@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Gasto</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}" />
-        <style>
+    <title>Nueva Obra</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
         body { 
             margin:0; 
             font-family: Arial, sans-serif; 
@@ -102,62 +102,64 @@
 <div class="container">
 
     <!-- Navbar -->
-<div class="navbar">
-        <a class="nav-btn"
-        th:href="@{/obras/{id}/{nombre}/gastos(id=${obra.obraId}, nombre=${obra.nombre})}">
-        Volver
-        </a>
-</div>
-
+    <div class="navbar">
+        <a th:href="@{/obras}" class="nav-btn">Volver</a>
+    </div>
 
     <!-- Título -->
-    <p class="title">Editar / Guardar Gasto</p>
+    <p class="title">Agregar Nueva Obra</p>
+
+    <!-- Errores -->
+    <div th:if="${error}" style="color: red; text-align:center;">
+        <p th:text="${error}"></p>
+    </div>
 
     <!-- Formulario -->
     <div class="form-container">
-        <h2>Formulario de Gasto</h2>
-
-        <form th:action="@{/obras/guardar-gasto}" th:object="${gasto}" method="post">
-            <input type="hidden" th:field="*{obras.obraId}" />
-            <input type="hidden" th:field="*{gastoId}" />
+        <h2>Registro de Obra</h2>
+        <form th:action="@{/obras}" th:object="${obra}" method="post">
 
             <div class="form-group">
-                <label>Categoría Material</label>
-                <input type="text" th:field="*{categoriaMaterial}" />
+                <label>Nombre:</label>
+                <input type="text" th:field="*{nombre}" required />
             </div>
 
             <div class="form-group">
-                <label>Proveedor</label>
-                <input type="text" th:field="*{trabajadorEncargo}" />
+                <label>Maestro Encargado:</label>
+                <input type="text" th:field="*{maestroEncargado}" />
             </div>
 
             <div class="form-group">
-                <label>Concepto</label>
-                <input type="text" th:field="*{concepto}" />
+                <label>Cliente:</label>
+                <input type="text" th:field="*{cliente}" />
             </div>
 
             <div class="form-group">
-                <label>Fecha</label>
-                <input type="date" th:field="*{fecha}" />
+                <label>Tipo de Obra:</label>
+                <input type="text" th:field="*{tipoObra}" />
             </div>
 
             <div class="form-group">
-                <label>No. Semana</label>
-                <input type="number" th:field="*{noSemana}" />
+                <label>Fecha Inicio:</label>
+                <input type="date" th:field="*{fechaInicio}" />
             </div>
 
             <div class="form-group">
-                <label>Monto</label>
+                <label>Fecha Finalización:</label>
+                <input type="date" th:field="*{fechaFinalizacion}" />
+            </div>
+
+            <div class="form-group">
+                <label>Presupuesto:</label>
                 <input type="number" step="0.01" th:field="*{presupuesto}" />
             </div>
 
             <button class="submit-button" type="submit">Guardar</button>
-            <button class="submit-button" type="button" 
-                    th:attr="onclick=|window.location.href='/obras/' + ${obra.obraId} + '/' + ${obra.nombre} + '/gastos'|">
-                Cancelar
-            </button>
+            <button class="submit-button" type="button" onclick="window.location.href='/obras'">Cancelar</button>
         </form>
     </div>
 </div>
+
+<script src="/js/main.js"></script>
 </body>
 </html>

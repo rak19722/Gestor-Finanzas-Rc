@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Gasto</title>
+    <title>Agregar Gasto</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
-        <style>
+    <style>
         body { 
             margin:0; 
             font-family: Arial, sans-serif; 
@@ -107,19 +107,20 @@
         th:href="@{/obras/{id}/{nombre}/gastos(id=${obra.obraId}, nombre=${obra.nombre})}">
         Volver
         </a>
+
 </div>
 
 
     <!-- Título -->
-    <p class="title">Editar / Guardar Gasto</p>
+    <p class="title">
+        Agregar Gasto para la obra: <span th:text="${obra.nombre}"></span>
+    </p>
 
     <!-- Formulario -->
     <div class="form-container">
-        <h2>Formulario de Gasto</h2>
-
+        <h2>Registro de Gasto</h2>
         <form th:action="@{/obras/guardar-gasto}" th:object="${gasto}" method="post">
             <input type="hidden" th:field="*{obras.obraId}" />
-            <input type="hidden" th:field="*{gastoId}" />
 
             <div class="form-group">
                 <label>Categoría Material</label>
@@ -152,12 +153,14 @@
             </div>
 
             <button class="submit-button" type="submit">Guardar</button>
-            <button class="submit-button" type="button" 
+            <button class="submit-button" type="button"
                     th:attr="onclick=|window.location.href='/obras/' + ${obra.obraId} + '/' + ${obra.nombre} + '/gastos'|">
                 Cancelar
             </button>
         </form>
     </div>
 </div>
+
+<script src="/js/main.js"></script>
 </body>
 </html>
